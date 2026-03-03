@@ -792,54 +792,161 @@ TS_LOCALS_PATTERN = """
 # (H) Patterns to detect at repo root and offer as exclude candidates (user selects which to exclude)
 IGNORE_PATTERNS = frozenset(
     {
+        # Version control
+        ".git",
+        ".hg",
+        ".svn",
+        # IDE/Editor
         ".cache",
         ".claude",
         ".eclipse",
+        ".idea",
+        ".vs",
+        ".vscode",
+        # Python
         ".eggs",
         ".env",
-        ".git",
-        ".gradle",
-        ".hg",
-        ".idea",
-        ".maven",
         ".mypy_cache",
         ".nox",
-        ".npm",
-        ".nyc_output",
-        ".pnpm-store",
         ".pytest_cache",
         ".qdrant_code_embeddings",
         ".ruff_cache",
-        ".svn",
-        ".tmp",
         ".tox",
         ".venv",
-        ".vs",
-        ".vscode",
-        ".yarn",
         "__pycache__",
-        "bin",
+        "env",
+        "htmlcov",
+        "site-packages",
+        "venv",
+        # JavaScript/Node
+        ".npm",
+        ".nyc_output",
+        ".pnpm-store",
+        ".yarn",
         "bower_components",
+        "node_modules",
+        # Build outputs (all languages)
+        ".next",  # Next.js build
+        ".nuxt",  # Nuxt.js build
+        ".output",  # Nuxt 3 build
+        ".turbo",  # Turborepo cache
+        ".vercel",  # Vercel deployment
+        ".parcel-cache",  # Parcel bundler
+        ".webpack",  # Webpack cache
+        "bin",
         "build",
         "coverage",
         "dist",
-        "env",
-        "htmlcov",
-        "node_modules",
         "obj",
         "out",
-        "Pods",
-        "site-packages",
         "target",
+        # Java/Gradle/Maven
+        ".gradle",
+        ".maven",
+        # Mobile
+        "Pods",
+        # Temp/misc
+        ".tmp",
         "temp",
         "tmp",
         "vendor",
-        "venv",
+        # Documentation/examples (optional - reduces noise)
+        ".github",
+        ".gitlab",
+        ".circleci",
+        "docs",
+        "documentation",
+        "examples",
+        # Assets (rarely need code analysis)
+        "assets",
+        "static",
+        "public",
+        # Test data
+        "fixtures",
+        "testdata",
+        "__fixtures__",
+        "__snapshots__",
+        # Database
+        "migrations",
+        # Logs
+        "logs",
     }
 )
 IGNORE_SUFFIXES = frozenset(
     {".tmp", "~", ".pyc", ".pyo", ".o", ".a", ".so", ".dll", ".class"}
 )
+
+# (H) File extensions to EXCLUDE from indexing (non-code files that bloat the graph)
+IGNORE_EXTENSIONS = frozenset(
+    {
+        # Source maps
+        ".map",
+        # Config/data (usually not analyzed)
+        ".json",
+        ".yaml",
+        ".yml",
+        ".toml",
+        ".ini",
+        ".cfg",
+        ".conf",
+        ".config",
+        ".lock",
+        ".lockb",
+        # Documentation
+        ".md",
+        ".mdx",
+        ".mdc",
+        ".rst",
+        ".txt",
+        ".rtf",
+        # Images
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".gif",
+        ".svg",
+        ".ico",
+        ".webp",
+        ".bmp",
+        ".tiff",
+        # Fonts
+        ".woff",
+        ".woff2",
+        ".ttf",
+        ".otf",
+        ".eot",
+        # Audio/Video
+        ".mp3",
+        ".mp4",
+        ".wav",
+        ".ogg",
+        ".webm",
+        # Archives
+        ".zip",
+        ".tar",
+        ".gz",
+        ".rar",
+        ".7z",
+        # Binary/compiled
+        ".exe",
+        ".bin",
+        ".wasm",
+        # Certificates/keys
+        ".pem",
+        ".crt",
+        ".key",
+        # Other
+        ".pdf",
+        ".csv",
+        ".xls",
+        ".xlsx",
+        ".xml",
+        ".example",
+    }
+)
+
+# (H) Maximum file size to index (skip files larger than this)
+MAX_FILE_SIZE_BYTES = 1 * 1024 * 1024  # 1 MB
 
 PAYLOAD_NODE_ID = "node_id"
 PAYLOAD_QUALIFIED_NAME = "qualified_name"

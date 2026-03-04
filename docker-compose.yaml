@@ -1,12 +1,22 @@
 services:
   memgraph:
     image: memgraph/memgraph-mage
+    container_name: memgraph-cgr
     ports:
-      - "${MEMGRAPH_PORT:-7687}:7687"
-      - "${MEMGRAPH_HTTP_PORT:-7444}:7444"
+      - "${MEMGRAPH_PORT:-7688}:7687"
+      - "${MEMGRAPH_HTTP_PORT:-7445}:7444"
   lab:
     image: memgraph/lab
+    container_name: memgraph-lab
     ports:
       - "${LAB_PORT:-3000}:3000"
     environment:
       QUICK_CONNECT_MG_HOST: memgraph
+    networks:
+      - default
+      - web_network
+
+networks:
+  web_network:
+    name: home_server_web
+    external: true

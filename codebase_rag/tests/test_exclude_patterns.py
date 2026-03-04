@@ -196,14 +196,14 @@ class TestGroupPathsByPattern:
             "src/__pycache__",
             "tests/__pycache__",
             ".git",
-            "docs/build",
+            "output/build",  # (H) Changed from "docs/build" since "docs" is now in IGNORE_PATTERNS
         }
         groups = _group_paths_by_pattern(paths)
 
         assert set(groups.keys()) == {".git", ".venv", "__pycache__", "build"}
         assert groups[".venv"] == [".venv", ".venv/lib/site-packages"]
         assert groups["__pycache__"] == ["src/__pycache__", "tests/__pycache__"]
-        assert groups["build"] == ["docs/build"]
+        assert groups["build"] == ["output/build"]
 
     def test_cli_excludes_without_pattern_match(self) -> None:
         from codebase_rag.main import _group_paths_by_pattern
@@ -409,7 +409,8 @@ class TestShouldSkipPath:
         )
 
     def test_exclude_paths_adds_to_default_skip(self, tmp_path: Path) -> None:
-        custom_dir = tmp_path / "my_custom_dir" / "file.txt"
+        # (H) Use .py extension since .txt is now in IGNORE_EXTENSIONS
+        custom_dir = tmp_path / "my_custom_dir" / "file.py"
         custom_dir.parent.mkdir(parents=True)
         custom_dir.touch()
 
@@ -642,7 +643,8 @@ class TestDirectoryVsFileBehavior:
         assert not should_skip_path(dir_path, tmp_path, unignore_paths=unignore_paths)
 
     def test_root_level_file(self, tmp_path: Path) -> None:
-        file_path = tmp_path / "README.md"
+        # (H) Use .py extension since .md is now in IGNORE_EXTENSIONS
+        file_path = tmp_path / "main.py"
         file_path.touch()
 
         assert not should_skip_path(file_path, tmp_path)

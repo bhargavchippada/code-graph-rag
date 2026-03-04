@@ -16,10 +16,12 @@ from codebase_rag.constants import (
     CYPHER_DELETE_CALLS,
     CYPHER_DELETE_FILE,
     CYPHER_DELETE_MODULE,
+    IGNORE_EXTENSIONS,
     IGNORE_PATTERNS,
     IGNORE_SUFFIXES,
     KEY_PATH,
     LOG_LEVEL_INFO,
+    MAX_FILE_SIZE_BYTES,
     REALTIME_LOGGER_FORMAT,
     WATCHER_SLEEP_INTERVAL,
     EventType,
@@ -37,12 +39,45 @@ class CodeChangeEventHandler(FileSystemEventHandler):
         self.updater = updater
         self.ignore_patterns = IGNORE_PATTERNS
         self.ignore_suffixes = IGNORE_SUFFIXES
+        self.ignore_extensions = IGNORE_EXTENSIONS
+        self.max_file_size = MAX_FILE_SIZE_BYTES
         logger.info(logs.WATCHER_ACTIVE)
 
     def _is_relevant(self, path_str: str) -> bool:
         path = Path(path_str)
+
+        # (H) Skip GNU sed temporary files (e.g. sedYUwglZ).
+        if (
+            not path.suffix
+            and path.name.startswith("sed")
+            and len(path.name) == 8
+            and path.name[3:].isalnum()
+        ):
+            return False
+
+        # (H) Skip files with ignored suffixes (temp files, compiled)
         if any(path.name.endswith(suffix) for suffix in self.ignore_suffixes):
             return False
+
+        # (H) Realtime updates should keep generic File nodes in sync for non-code
+        # files (e.g. .md), so only hard-drop noisy log files by extension.
+        if path.suffix.lower() == ".log":
+            return False
+
+        # (H) Skip files with numeric/timestamp extensions (temp files like .1772368411198)
+        if path.suffix:
+            suffix_without_dot = path.suffix[1:]
+            if suffix_without_dot.isdigit():
+                return False
+
+        # (H) Skip files larger than max size
+        try:
+            if path.is_file() and path.stat().st_size > self.max_file_size:
+                return False
+        except OSError:
+            pass  # File might not exist or be inaccessible
+
+        # (H) Skip paths containing any ignore pattern
         return all(part not in self.ignore_patterns for part in path.parts)
 
     def dispatch(self, event: FileSystemEvent) -> None:

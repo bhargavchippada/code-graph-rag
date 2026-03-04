@@ -799,6 +799,7 @@ IGNORE_PATTERNS = frozenset(
         # IDE/Editor
         ".cache",
         ".claude",
+        ".playwright-mcp",
         ".eclipse",
         ".idea",
         ".vs",
@@ -813,6 +814,7 @@ IGNORE_PATTERNS = frozenset(
         ".ruff_cache",
         ".tox",
         ".venv",
+        ".coverage",
         "__pycache__",
         "env",
         "htmlcov",
@@ -892,6 +894,7 @@ IGNORE_EXTENSIONS = frozenset(
         ".config",
         ".lock",
         ".lockb",
+        ".log",
         # Documentation
         ".md",
         ".mdx",

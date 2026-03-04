@@ -362,6 +362,11 @@ class TestIgnorePatterns:
         assert "venv" in cs.IGNORE_PATTERNS
         assert ".venv" in cs.IGNORE_PATTERNS
 
+    def test_agent_tooling_dirs_in_ignore_patterns(self) -> None:
+        assert ".agent" in cs.IGNORE_PATTERNS
+        assert ".agents" in cs.IGNORE_PATTERNS
+        assert ".codex" in cs.IGNORE_PATTERNS
+
     def test_detects_site_packages_at_root(self, tmp_path: Path) -> None:
         (tmp_path / "site-packages").mkdir()
 

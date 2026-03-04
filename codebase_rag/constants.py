@@ -798,7 +798,10 @@ IGNORE_PATTERNS = frozenset(
         ".svn",
         # IDE/Editor
         ".cache",
+        ".agent",
+        ".agents",
         ".claude",
+        ".codex",
         ".playwright-mcp",
         ".eclipse",
         ".idea",

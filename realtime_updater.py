@@ -198,10 +198,16 @@ def _run_watcher_loop(ingestor, repo_path_obj, parsers, queries):
     observer.schedule(event_handler, str(repo_path_obj), recursive=True)
     observer.start()
     logger.info(logs.WATCHING.format(path=repo_path_obj))
+    heartbeat_interval_seconds = 60
+    last_heartbeat = 0.0
 
     try:
         while True:
             time.sleep(WATCHER_SLEEP_INTERVAL)
+            now = time.time()
+            if now - last_heartbeat >= heartbeat_interval_seconds:
+                logger.info("Realtime watcher heartbeat")
+                last_heartbeat = now
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
